@@ -31,11 +31,11 @@ $ pip install -r requirements.txt
 ```
 
 ## Running
-1. Server
+### 1. Server
 ```
 $ python manage.py runserver
 ```
-2. Queue
+### 2. Queue
 ```
 $ python manage.py qcluster
 ```
