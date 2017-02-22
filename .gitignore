@@ -1,0 +1,5 @@
+.idea/
+media/
+thumbnail/
+tmp/
+db.sqlite3
