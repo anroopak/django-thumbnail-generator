@@ -28,6 +28,7 @@
 ```
 $ sudo apt-get install ffmpeg
 $ pip install -r requirements.txt
+$ python manage.py migrate
 ```
 
 ## Running

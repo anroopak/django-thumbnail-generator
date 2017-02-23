@@ -72,3 +72,13 @@ class MediaViewset(viewsets.ModelViewSet):
             media.remove()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # Disabling usual create APIs
+    def create(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
