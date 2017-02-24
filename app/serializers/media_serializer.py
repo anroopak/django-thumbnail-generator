@@ -5,6 +5,7 @@ from app.models.media import Media
 class MediaSerializer(serializers.ModelSerializer):
 
     thumbnails = serializers.ListField()
+    media_file = serializers.URLField(required=False)
 
     class Meta:
         model = Media
@@ -14,3 +15,4 @@ class MediaSerializer(serializers.ModelSerializer):
                             'ext',
                             'content_type',
                             'duration')
+

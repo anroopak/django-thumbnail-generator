@@ -15,6 +15,7 @@ class AmuzeConfig(object):
 
     TMP_FOLDER = _settings.get('TMP_FOLDER', "./tmp")
     MEDIA_FOLDER = _settings.get('MEDIA_FOLDER', "./media")
+    MEDIA_URL = settings.MEDIA_URL
     THUMBNAIL_FOLDER = _settings.get('THUMBNAIL_FOLDER', "./thumbnail")
 
     THUMBNAIL_WIDTH = _settings.get("THUMBNAIL_WIDTH", 640)

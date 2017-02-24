@@ -127,8 +127,12 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 CUSTOM_SETTINGS = {
-    'MAX_STR_LENGTH': 255
+    'MAX_STR_LENGTH': 255,
+    'MEDIA_FOLDER': './media',
+    'THUMBNAIL_FOLDER': './thumbnail'
 }
+
+MEDIA_URL = "media/"
 
 Q_CLUSTER = {
     'name': 'amuze_q',

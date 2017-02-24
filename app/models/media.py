@@ -3,6 +3,8 @@ import os
 import subprocess
 
 import shutil
+import urlparse
+
 from django.db import models
 
 from utils import amuze_time
@@ -28,6 +30,10 @@ class Media(models.Model):
     def thumbnails(self):
         return os.listdir(self.thumbnail_path) if self.thumbnail_path else []
 
+    @property
+    def media_file(self):
+        return urlparse.urljoin(AmuzeConfig.MEDIA_URL, self.media_path)
+
     @staticmethod
     def generate_md5(file_obj, block_size=65536):
         tmp_hash = hashlib.md5()
@@ -47,13 +53,14 @@ class Media(models.Model):
     def _move_to_media_folder(self, media_file):
         tmp, ext = os.path.splitext(media_file.name)
         file_path = "%d_%s%s" % (self.pk, self.md5_sum, ext)
-        self.media_path = os.path.join(AmuzeConfig.MEDIA_FOLDER, file_path)
-        with open(self.media_path, "w+") as w_file:
+        media_path = os.path.join(AmuzeConfig.MEDIA_FOLDER, file_path)
+        with open(media_path, "w+") as w_file:
             if isinstance(media_file, file):
                 w_file.write(media_file.read())
             else:
                 for chunk in media_file.chunks():
                     w_file.write(chunk)
+        self.media_path = file_path
 
     def _find_thumbnail_point(self):
         return int(self.duration / 2)
