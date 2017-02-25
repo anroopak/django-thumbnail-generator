@@ -26,19 +26,13 @@
 
 
 ## Model
-media_id = Auto incremented ID field
-
-name = String - name of the media
-
-content_type = String - content type (mime type) of the media
-
-md5_sum = String - md5 checksum of the media
-
-duration = Float - duration of the media. Default is -1, when duration calculation has not been performed.
- 
-media_path = String - path to the media
-
-thumbnail_path = String - path to the thumbnail
+ - media_id = Auto incremented ID field
+ - name = String - name of the media
+ - content_type = String - content type (mime type) of the media
+ - md5_sum = String - md5 checksum of the media
+ - duration = Float - duration of the media. Default is -1, when duration calculation has not been performed.
+ - media_path = String - path to the media
+ - thumbnail_path = String - path to the thumbnail
 
 ## Some Design decisions
 #### 1. Async Job to generate thumbnail, determine duration
