@@ -1,15 +1,11 @@
+import hashlib
 import os
-
 import subprocess
-
-import shutil
-import urlparse
 
 from django.db import models
 
 from utils import amuze_time
 from utils.amuze_config import AmuzeConfig
-import hashlib
 
 
 class Media(models.Model):
@@ -22,17 +18,9 @@ class Media(models.Model):
     content_type = models.CharField(max_length=AmuzeConfig.MAX_STR_LENGTH)
     md5_sum = models.CharField(max_length=AmuzeConfig.MAX_STR_LENGTH)
 
-    duration = models.FloatField(default=0.0)
+    duration = models.FloatField(default=-1)
     media_path = models.CharField(max_length=AmuzeConfig.MAX_STR_LENGTH)
     thumbnail_path = models.CharField(max_length=AmuzeConfig.MAX_STR_LENGTH)
-
-    @property
-    def thumbnails(self):
-        return os.listdir(self.thumbnail_path) if self.thumbnail_path else []
-
-    @property
-    def media_file(self):
-        return urlparse.urljoin(AmuzeConfig.MEDIA_URL, self.media_path)
 
     @staticmethod
     def generate_md5(file_obj, block_size=65536):
@@ -50,34 +38,16 @@ class Media(models.Model):
         self._move_to_media_folder(media_file)
         self.save()
 
-    def _move_to_media_folder(self, media_file):
-        tmp, ext = os.path.splitext(media_file.name)
-        file_path = "%d_%s%s" % (self.pk, self.md5_sum, ext)
-        media_path = os.path.join(AmuzeConfig.MEDIA_FOLDER, file_path)
-        with open(media_path, "w+") as w_file:
-            if isinstance(media_file, file):
-                w_file.write(media_file.read())
-            else:
-                for chunk in media_file.chunks():
-                    w_file.write(chunk)
-        self.media_path = file_path
-
-    def _find_thumbnail_point(self):
-        return int(self.duration / 2)
-
     def generate_thumbnail(self, width=AmuzeConfig.THUMBNAIL_WIDTH, height=AmuzeConfig.THUMBNAIL_HEIGHT):
-        thumbnail_folder_name = "%d_thumbnail_%s" % (self.pk, self.md5_sum)
+        thumbnail_file_name = "%d_thumbnail_%s.jpg" % (self.pk, self.md5_sum)
         thumbnail_point = self._find_thumbnail_point()
-        self.thumbnail_path = os.path.join(AmuzeConfig.THUMBNAIL_FOLDER, thumbnail_folder_name)
-        if not os.path.exists(self.thumbnail_path):
-            os.mkdir(self.thumbnail_path)
-        file_name = os.path.join(self.thumbnail_path, thumbnail_folder_name + "_%02d.jpg")
+        self.thumbnail_path = os.path.join(AmuzeConfig.THUMBNAIL_FOLDER, thumbnail_file_name)
         cmd = "ffmpeg -i %s -ss %d \
             -vf \"select=gt(scene\,0.4)\" \
-            -vf scale=%d:%d -frames:v 5 \
+            -vf scale=%d:%d -frames:v 1 \
             -vsync vfr %s \
             -loglevel panic"
-        cmd %= (self.media_path, thumbnail_point, width, height, file_name)
+        cmd %= (self.media_path, thumbnail_point, width, height, self.thumbnail_path)
         subprocess.check_output(cmd, shell=True)
         self.save()
 
@@ -90,9 +60,26 @@ class Media(models.Model):
         self.save()
 
     def remove(self):
-        os.remove(self.media_path)
-        shutil.rmtree(self.thumbnail_path)
+        if os.path.exists(self.media_path):
+            os.remove(self.media_path)
+        if os.path.exists(self.thumbnail_path):
+            os.remove(self.thumbnail_path)
         self.delete()
+
+    def _move_to_media_folder(self, media_file):
+        tmp, ext = os.path.splitext(media_file.name)
+        file_path = "%d_%s%s" % (self.pk, self.md5_sum, ext)
+        media_path = os.path.join(AmuzeConfig.MEDIA_FOLDER, file_path)
+        with open(media_path, "w+") as w_file:
+            if isinstance(media_file, file):
+                w_file.write(media_file.read())
+            else:
+                for chunk in media_file.chunks():
+                    w_file.write(chunk)
+        self.media_path = media_path
+
+    def _find_thumbnail_point(self):
+        return int(self.duration / 2)
 
 
 def find_duration_job(media_id):

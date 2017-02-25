@@ -3,3 +3,4 @@ media/
 thumbnail/
 tmp/
 db.sqlite3
+**.pyc

@@ -85,11 +85,13 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'museon',
+        'USER': 'museon',
+        'PASSWORD': 'museon',
+        'HOST': 'localhost'
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
@@ -129,17 +131,32 @@ STATIC_URL = '/static/'
 CUSTOM_SETTINGS = {
     'MAX_STR_LENGTH': 255,
     'MEDIA_FOLDER': './media',
-    'THUMBNAIL_FOLDER': './thumbnail'
+    'THUMBNAIL_FOLDER': './thumbnail',
+    'SUPPORTED_FORMATS': [
+        # For .mp4
+        'video/mp4',
+        # For .mov
+        'video/quicktime',
+        # For .avi
+        'video/msvideo',
+        'video/x-msvideo',
+        'video/avi'
+    ],
+    'MAX_FILE_SIZE_IN_MB': 15  # in MB
 }
 
+# Content types source
+# https://www.sitepoint.com/web-foundations/mime-types-complete-list/
+
 MEDIA_URL = "media/"
+THUMBNAIL_URL = "thumbnail/"
 
 Q_CLUSTER = {
     'name': 'amuze_q',
     'workers': 4,
     'timeout': 300,  # 5 minutes
     'retry': 420,  # 7 mintues
-    'queue_limit': 500,
+    'queue_limit': 50,
     'bulk': 10,
     'orm': 'default'
 }

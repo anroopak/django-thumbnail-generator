@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
 from rest_framework import serializers
 from rest_framework.decorators import list_route
@@ -15,8 +16,7 @@ class MediaViewset(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
 
-    @list_route(methods=['PUT'])
-    def upload(self, request, **kwargs):
+    def create(self, request, *args, **kwargs):
         request_ser = MediaSerializer(data=request.data)
         if not request_ser.is_valid():
             return Response(request_ser.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -24,17 +24,15 @@ class MediaViewset(viewsets.ModelViewSet):
         name = request_ser.data['name']
         media_file = request.FILES['media']
 
-        print media_file.__dict__
-
         if media_file.content_type not in AmuzeConfig.SUPPORTED_FORMATS:
             response_text = {
-                "message": "File Format not supported"
+                "error": "File Format not supported"
             }
             return Response(response_text, status=status.HTTP_400_BAD_REQUEST)
 
         if media_file.size > AmuzeConfig.SUPPORTED_FILE_SIZE:
             response_text = {
-                "message": "File size exceeds supported file size"
+                "error": "File size exceeds supported file size"
             }
             return Response(response_text, status=status.HTTP_400_BAD_REQUEST)
 
@@ -46,11 +44,11 @@ class MediaViewset(viewsets.ModelViewSet):
         chain.append(generate_thumbnail_job, media.pk)
         chain.run()
 
-        media_ser = MediaSerializer(media)
+        media_ser = MediaSerializer(media, context={'request': request})
         return Response(media_ser.data, status=status.HTTP_200_OK)
 
     @list_route(methods=['DELETE'])
-    def remove(self, request, **kwargs):
+    def remove(self, request, *args, **kwargs):
 
         class RequestSerializer(serializers.Serializer):
             ids = serializers.ListField(child=serializers.IntegerField())
@@ -60,12 +58,12 @@ class MediaViewset(viewsets.ModelViewSet):
             return Response(request_ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
         media_ids = request_ser.data['ids']
-        media_objs = Media.objects.filter(pk__in=media_ids)
+        media_objs = self.queryset.objects.filter(pk__in=media_ids)
 
         missing_ids = list(set(media_ids) - set([t.pk for t in media_objs]))
         if len(missing_ids) != 0:
             return Response({
-                "message": "Some IDs are missings - `%s`" % "`,`".join([str(t) for t in missing_ids])
+                "error": "Some IDs are missings - `%s`" % "`,`".join([str(t) for t in missing_ids])
             }, status=status.HTTP_400_BAD_REQUEST)
 
         for media in media_objs:
@@ -73,12 +71,10 @@ class MediaViewset(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    # Disabling usual create APIs
-    def create(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def partial_update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    def destroy(self, request, pk=None, *args, **kwargs):
+        try:
+            media = self.queryset.get(pk=pk)
+            media.remove()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist as e:
+            return Response({"error": e.message}, status=status.HTTP_404_NOT_FOUND)

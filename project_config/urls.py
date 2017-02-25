@@ -30,3 +30,4 @@ urlpatterns = [
 ]
 
 urlpatterns += static.static(AmuzeConfig.MEDIA_URL, document_root=AmuzeConfig.MEDIA_FOLDER)
+urlpatterns += static.static(AmuzeConfig.THUMBNAIL_URL, document_root=AmuzeConfig.THUMBNAIL_FOLDER)
