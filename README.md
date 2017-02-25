@@ -1,6 +1,7 @@
 # Amuze Thumbnail Generator
 
 [1. Design](./Design.md)
+
 [2. API Doc](./API.md)
 
 ## Installing
