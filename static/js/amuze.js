@@ -59,6 +59,11 @@ function loadList() {
 
     $("#list-boxes").fadeOut(function() {
         $("#loading-block").fadeIn();
+        listBoxHtml = '<div class="alert alert-info alert-dismissible" role="alert"> \
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+                  <strong>Uploading!</strong> Please wait while upload is happening.\
+                </div>';
+        $("#list-boxes .row").html(listBoxHtml).fadeIn();
         var xhr = new XMLHttpRequest();
         xhr.open('GET', GET_URL + '?' + paramStr, true);
         xhr.send();
