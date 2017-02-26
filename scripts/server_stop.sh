@@ -1,0 +1,1 @@
+for pid in $(ps -aux | egrep runserver | awk '{ print $2}'); do kill $pid; done

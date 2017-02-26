@@ -1,0 +1,1 @@
+for pid in $(ps -aux | egrep qcluster | awk '{ print $2}'); do kill $pid; done

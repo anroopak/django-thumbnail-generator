@@ -1,0 +1,30 @@
+# Author - Roopak A N <anroopak@gmail.com>
+
+SET HTTPD
+  port 2812
+  allow museon:museon
+
+SET LOGFILE /var/log/monit.log
+
+SET DAEMON 10 # 1 minutes
+
+SET ALERT anroopak@gmail.com
+
+# -------------------
+#       Server
+# -------------------
+CHECK HOST server ADDRESS localhost
+    start program = "/bin/bash /home/ubuntu/django-thumbnail-generator/scripts/server_start.sh"
+    stop program  = "/bin/bash /home/ubuntu/django-thumbnail-generator/scripts/server_stop.sh"
+    if failed port 80 protocol HTTP
+      request /
+      with timeout 30 seconds
+      then restart
+    if 3 restarts within 10 cycles then alert
+
+# -------------------
+#       Q Cluster
+# -------------------
+CHECK PROCESS qcluster MATCHING qcluster
+    start program = "/bin/bash /home/ubuntu/django-thumbnail-generator/scripts/qcluster_start.sh"
+    stop program  = "/bin/bash /home/ubuntu/django-thumbnail-generator/scripts/qcluster_stop.sh"
