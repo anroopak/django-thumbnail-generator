@@ -66,6 +66,7 @@ function loadList() {
                         var mediaThumbnailUrl = thisMedia.thumbnail_url || DEFAULT_THUMBNAIL;
                         var mediaName = thisMedia.name;
                         var mediaId = thisMedia.media_id;
+                        var mediaUrl = thisMedia.media_url;
                         listBoxHtml += '<div class="col-md-3 col-xs-12 col-sm-6"> \
                         <div class="amuze-thumbnail"> \
                             <img src="' + mediaThumbnailUrl + '" class="img-responsive"> \
@@ -73,6 +74,7 @@ function loadList() {
                             <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#deleteModal" data-media-id=' + mediaId + ' data-media-name="' + mediaName + '"> \
                                 <span class="glyphicon glyphicon-trash"></span> \
                             </button> \
+                            <a href="' + mediaUrl + '" target="_blank" class="btn btn-primary btn-xs">Play <span class="glyphicon glyphicon-play-circle"></span></a>\
                             ' + mediaName + ' \
                             </p> \
                         </div> \
