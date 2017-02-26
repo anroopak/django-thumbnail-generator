@@ -134,11 +134,11 @@ function deleteMedia() {
 // Catch the form submit and upload the files
 function uploadFiles(event) {
     $("#uploadBtn").attr("disabled", true);
-    listBoxHtml = '<div class="alert alert-info alert-dismissible" role="alert"> \
+    var uploadMsgHtml = '<div class="alert alert-info alert-dismissible" role="alert"> \
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
                   <strong>Uploading!</strong> Please wait while upload is happening.\
                 </div>';
-    $("#list-boxes .row").html(listBoxHtml).fadeIn();
+    $("#uploadMessage").html(uploadMsgHtml).fadeIn();
     // files = event.target.files;
     // Loader
     var data = new FormData();
