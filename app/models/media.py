@@ -46,6 +46,7 @@ class Media(models.Model):
             -vf \"select=gt(scene\,0.4)\" \
             -vf scale=%d:%d -frames:v 1 \
             -vsync vfr %s \
+            -y \
             -loglevel panic"
         cmd %= (self.media_path, thumbnail_point, width, height, self.thumbnail_path)
         subprocess.check_output(cmd, shell=True)

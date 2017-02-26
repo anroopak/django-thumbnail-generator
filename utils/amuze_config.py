@@ -14,6 +14,7 @@ class AmuzeConfig(object):
     SUPPORTED_FILE_SIZE = _settings.get("MAX_FILE_SIZE_IN_MB", 2) * _MB_TO_BYTES
 
     TMP_FOLDER = _settings.get('TMP_FOLDER', "./tmp")
+    STATIC_FOLDER = _settings.get('STATIC_FOLDER', "./media")
     MEDIA_FOLDER = _settings.get('MEDIA_FOLDER', "./media")
     THUMBNAIL_FOLDER = _settings.get('THUMBNAIL_FOLDER', "./thumbnail")
     MEDIA_URL = settings.MEDIA_URL

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Amuze</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab|Sansita" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static "css/amuze.css " %}">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#amuze-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Amuze</a>
+            </div>
+            <div class="collapse navbar-collapse" id="amuze-collapse">
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" id="searchBox">
+                    </div>
+                    <button type="button" id="refreshBtn" class="btn btn-default">
+                        Go <span class="glyphicon glyphicon-repeat"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">
+                        Upload <span class="glyphicon glyphicon-cloud-upload"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div id="amuze-main">
+        <div class="container">
+            <div id="loading-block" class="text-center">
+                <div class="row">
+                    <h2>Loading <span class="glyphicon glyphicon-refresh"></span></h2>
+                </div>
+            </div>
+            <div id="list-boxes">
+                <div class="row">
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+                <div class="amuze-footer">
+                    Made with <span class="glyphicon glyphicon-heart"></span> by Roopak A N
+                </div>
+            </div>
+        </nav>
+        <!-- Modal -->
+        <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="uploadModalLabel">Upload Media</h4>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="mediaName">Name</label>
+                                <input type="text" class="form-control" id="mediaName" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="mediaFile">Media</label>
+                                <input type="file" id="mediaFile" name="media">
+                            </div>
+                            <div id="uploadMessage"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="uploadBtn">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="deleteModalLabel">Delete Media</h4>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure to delete &quot; <span class="deleteText"></span> &quot;?
+                        <div id="deleteMessage"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="deleteMediaBtn">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="{% static "js/amuze.js " %}"></script>
+</body>
+
+</html>

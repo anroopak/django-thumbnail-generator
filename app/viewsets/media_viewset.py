@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
 from rest_framework import serializers
+from rest_framework import filters
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,6 +16,9 @@ from django_q.tasks import Chain
 class MediaViewset(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
+    filter_backends = (filters.OrderingFilter, filters.SearchFilter,)
+    ordering_fields = ('media_id', 'name', )
+    search_fields = ('name', )
 
     def create(self, request, *args, **kwargs):
         request_ser = MediaSerializer(data=request.data)
@@ -45,7 +49,7 @@ class MediaViewset(viewsets.ModelViewSet):
         chain.run()
 
         media_ser = MediaSerializer(media, context={'request': request})
-        return Response(media_ser.data, status=status.HTTP_200_OK)
+        return Response(media_ser.data, status=status.HTTP_201_CREATED)
 
     @list_route(methods=['DELETE'])
     def remove(self, request, *args, **kwargs):
