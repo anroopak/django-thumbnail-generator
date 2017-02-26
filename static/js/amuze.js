@@ -1,5 +1,16 @@
 const DEFAULT_THUMBNAIL = "static/img/default-thumbnail.jpg";
 const GET_URL = 'v1/media/';
+const SUPPORT_FILE_FORMATS = [
+    // For .mp4
+    'video/mp4',
+    // For .mov
+    'video/quicktime',
+    // For .avi
+    'video/msvideo',
+    'video/x-msvideo',
+    'video/avi'
+];
+
 var files;
 var pagination = {
     offset: 0,
@@ -13,9 +24,9 @@ $(document).ready(function() {
     loadList({});
 
     $('#deleteModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var mediaId = button.data('media-id'); // Extract info from data-* attributes
-        var mediaName = button.data('media-name'); // Extract info from data-* attributes
+        var button = $(event.relatedTarget);
+        var mediaId = button.data('media-id');
+        var mediaName = button.data('media-name');
         var modal = $(this);
         modal.find('.modal-body .deleteText').text(mediaName);
         deleteMediaId = mediaId;
@@ -128,10 +139,10 @@ function uploadFiles(event) {
     var error = 0;
     for (var i = files.length - 1; i >= 0; i--) {
         var file = files[i];
-        if (!file.type.match('video.*')) {
+        if (!file.type.match('video.*') || (SUPPORT_FILE_FORMATS.indexOf(file.type) === -1)) {
             $("#uploadMessage").html('<div class="alert alert-warning alert-dismissible" role="alert"> \
               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
-              <strong>Invalid Content Type!</strong> Better check yourself.\
+              <strong>Invalid Content Type!</strong> Support file formats - .mp4, .avi, .mov .\
             </div>');
             error = 1;
         } else if (file.size > 15 * 1024 * 1024) {
